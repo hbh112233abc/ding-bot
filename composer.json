@@ -1,0 +1,21 @@
+{
+    "name": "bingher/ding-bot",
+    "description": "dingding bot plugin",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "hbh112233abc",
+            "email": "hbh112233abc@163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "bingher\\ding": "src"
+        }
+    }
+}
