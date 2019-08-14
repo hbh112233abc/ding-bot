@@ -48,3 +48,64 @@ $res = $ding->makeLink(
     ->makeLink('你我所熟知的那个维基百科，出事情了','https://bh.sb/post/46120/','https://abiko.loli.net/thumb/?src=https://dulei.si/files/2019/07/28/006f52e9102a8d3be2fe5614f42ba989.jpeg&w=240&h=180&zc=1')
     ->feedCard();
 ```
+## log driver for thinkphp6
+### config
+```
+# config/log.php
+return [
+    // 默认日志记录通道
+    'default'      => Env::get('log.channel', 'file'),
+    // 日志记录级别
+    'level'        => [],
+    // 日志类型记录的通道 ['error'=>'email',...]
+    'type_channel' => ['error'=>'ding',],
+    // 是否关闭日志写入
+    'close'        => false,
+    // 全局日志处理 支持闭包
+    'processor'    => null,
+
+    // 日志通道列表
+    'channels'     => [
+        'file' => [
+            // 日志记录方式
+            'type'           => 'File',
+            // 日志保存目录
+            'path'           => '',
+            // 单文件日志写入
+            'single'         => false,
+            // 独立日志级别
+            'apart_level'    => [],
+            // 最大日志文件数量
+            'max_files'      => 0,
+            // 使用JSON格式记录
+            'json'           => false,
+            // 日志处理
+            'processor'      => null,
+            // 关闭通道日志写入
+            'close'          => false,
+            // 日志输出格式化
+            'format'         => '[%s][%s] %s',
+            // 是否实时写入
+            'realtime_write' => false,
+        ],
+        // 其它日志通道配置
+        'ding' => [
+            // 日志记录方式
+            'type'           => '\\bingher\\ding\\DingLog',
+            'webhook' => 'https://oapi.dingtalk.com/robot/send?access_token=xxxx', //你申请的钉钉机器人api
+            'at' => [], //接收人手机号
+        ],
+    ],
+
+];
+```
+> 因为钉钉群机器人每分钟最多20条信息,所以建议将error级别的日志使用钉钉来发送,可以及时收到错误提醒
+### demo
+```
+\think\facade\Log::info('有点事情');
+\think\facade\Log::notice('有点问题');
+\think\facade\Log::error('代志大条了');
+```
+仅error消息会通知到钉钉
+![](images/error1.png)
+![](images/error2.png)
