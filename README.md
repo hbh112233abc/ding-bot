@@ -106,6 +106,7 @@ return [
 \think\facade\Log::notice('有点问题');
 \think\facade\Log::error('代志大条了');
 ```
-仅error消息会通知到钉钉
+> 仅error消息会通知到钉钉
+
 ![](images/error1.png)
 ![](images/error2.png)
