@@ -88,7 +88,7 @@ class DingBot
                 $mobiles = [$mobiles];
             }
         }
-        var_dump($mobiles);
+
         if (empty($this->at)) {
             $this->at = [
                 'atMobiles' => [],
@@ -291,7 +291,6 @@ class DingBot
         if (empty($data['at'])) {
             $data['at'] = $this->at;
         }
-        var_dump($data);
         $this->init();
         $res = $this->request($data);
         $result = json_decode($res,true);

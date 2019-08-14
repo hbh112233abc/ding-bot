@@ -1,8 +1,9 @@
 <?php
-namespace think\log\driver;
+namespace bingher\ding;
 
 use think\contract\LogHandlerInterface;
 use bingher\ding\DingBot;
+use think\facade\Request;
 /**
  * 钉钉日志驱动
  */
@@ -20,7 +21,8 @@ class DingLog implements LogHandlerInterface
     protected $config = [
         'webhook' => '',
         'at' => [],
-        'show_included_files' => true,
+        'show_params' => true,
+        'show_included_files' => false,
         'debug' => true,
     ];
 
@@ -39,6 +41,7 @@ class DingLog implements LogHandlerInterface
      */
     public function save(array $log = []):bool
     {
+
         $trace = [];
 
         if ($this->config['debug']) {
@@ -51,6 +54,9 @@ class DingLog implements LogHandlerInterface
 
             // 基本信息
             $trace[] = $current_uri;
+        }
+        if ($this->config['show_params']) {
+            $trace[] = '[params]'.var_export(Request::param(),true);
         }
 
         foreach ($log as $type => $val) {
