@@ -36,7 +36,7 @@ class DingBot
     protected $error = '';
     function __construct(array $config = [])
     {
-        $default = include_once(__DIR__.'/config.php');
+        $default = include(__DIR__.'/config.php');
         $config = array_merge($default,$config);
         if (empty($this->webhook)) {
             $this->webhook = $config['webhook'];
