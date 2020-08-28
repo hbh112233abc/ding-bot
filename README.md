@@ -9,6 +9,12 @@ composer require bingher/ding-bot
 ## use
 参考钉钉自定义机器人[接口文档](https://open-doc.dingtalk.com/microapp/serverapi2/qf2nxq)
 ```
+$config = [
+    //自定义机器人api接口链接
+    'webhook' => 'https://oapi.dingtalk.com/robot/send?access_token=xxxx',
+    //签名密钥
+    'secret'  => 'ssss',
+];
 //实例化
 $ding = new \bingher\ding\DingBot;
 
