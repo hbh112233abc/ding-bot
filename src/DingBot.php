@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare (strict_types = 1);
 namespace bingher\ding;
 
 class DingBot
@@ -9,6 +9,19 @@ class DingBot
      * @var string
      */
     protected $webhook = '';
+
+    /**
+     * 设置签名密钥
+     * @var string
+     */
+    protected $secret = '';
+
+    /**
+     * 关键词
+     * @var string
+     */
+    protected $keyword = '';
+
     /**
      * 消息类型
      * @var string
@@ -34,13 +47,14 @@ class DingBot
      * @var string
      */
     protected $error = '';
-    function __construct(array $config = [])
+    public function __construct(array $config = [])
     {
-        $default = include(__DIR__.'/config.php');
-        $config = array_merge($default,$config);
+        $this->webhook = $config['webhook'] ?? '';
         if (empty($this->webhook)) {
-            $this->webhook = $config['webhook'];
+            throw new \Exception('webhook not setting');
         }
+        $this->secret  = $config['secret'] ?? '';
+        $this->keyword = $config['keyword'] ?? '';
     }
 
     /**
@@ -49,9 +63,9 @@ class DingBot
      */
     public function init()
     {
-        $this->at = [];
+        $this->at    = [];
         $this->links = [];
-        $this->btns = [];
+        $this->btns  = [];
         return $this;
     }
 
@@ -82,8 +96,8 @@ class DingBot
             return $this;
         }
         if (is_string($mobiles)) {
-            if (strpos($mobiles,',')) {
-                $mobiles = explode(',',$mobiles);
+            if (strpos($mobiles, ',')) {
+                $mobiles = explode(',', $mobiles);
             } else {
                 $mobiles = [$mobiles];
             }
@@ -92,10 +106,10 @@ class DingBot
         if (empty($this->at)) {
             $this->at = [
                 'atMobiles' => [],
-                'isAtAll' => false,
+                'isAtAll'   => false,
             ];
         }
-        $this->at['atMobiles'] = array_merge($this->at['atMobiles'],$mobiles);
+        $this->at['atMobiles'] = array_merge($this->at['atMobiles'], $mobiles);
         return $this;
     }
 
@@ -119,7 +133,7 @@ class DingBot
     public function text(string $content = '')
     {
         $this->msgType = 'text';
-        $data = [
+        $data          = [
             'text' => [
                 'content' => $content,
             ],
@@ -135,15 +149,15 @@ class DingBot
      * @param  string $picUrl  附图url
      * @return array    发送结果
      */
-    public function link(string $title,string $content,string $linkUrl,string $picUrl = '')
+    public function link(string $title, string $content, string $linkUrl, string $picUrl = '')
     {
         $this->msgType = 'link';
-        $data = [
+        $data          = [
             'link' => [
-                'title' => $title,
-                'text' => $content,
+                'title'      => $title,
+                'text'       => $content,
                 'messageUrl' => $linkUrl,
-                'picUrl' => $picUrl,
+                'picUrl'     => $picUrl,
             ],
         ];
         return $this->sendMsg($data);
@@ -155,13 +169,13 @@ class DingBot
      * @param  string $content 内容
      * @return [type]          [description]
      */
-    public function markdown(string $title,string $content)
+    public function markdown(string $title, string $content)
     {
         $this->msgType = 'markdown';
-        $data = [
+        $data          = [
             'markdown' => [
                 'title' => $title,
-                'text' => $content,
+                'text'  => $content,
             ],
         ];
         return $this->sendMsg($data);
@@ -178,20 +192,27 @@ class DingBot
      * @param  int|integer $hideAvatar     头像显示 0:隐藏,1:显示
      * @return [type]                      [description]
      */
-    public function singleActionCard(string $title,string $content,string $url,string $picUrl = '',string $singleTitle = '阅读全文',int $btnOrientation = 0,int $hideAvatar = 1)
-    {
+    public function singleActionCard(
+        string $title,
+        string $content,
+        string $url,
+        string $picUrl = '',
+        string $singleTitle = '阅读全文',
+        int $btnOrientation = 0,
+        int $hideAvatar = 1
+    ) {
         $this->msgType = 'actionCard';
         if (!empty($picUrl)) {
-            $content = "![screenshot]({$picUrl})".$content;
+            $content = "![screenshot]({$picUrl})" . $content;
         }
         $data = [
             'actionCard' => [
-                'title' => $title,
-                'text' => $content,
-                'singleTitle' => $title,
-                'singleURL' => $url,
+                'title'          => $title,
+                'text'           => $content,
+                'singleTitle'    => $singleTitle,
+                'singleURL'      => $url,
                 'btnOrientation' => $btnOrientation,
-                'hideAvatar' => $hideAvatar,
+                'hideAvatar'     => $hideAvatar,
             ],
         ];
         return $this->sendMsg($data);
@@ -203,10 +224,10 @@ class DingBot
      * @param  string $url   跳转链接
      * @return [type]        [description]
      */
-    public function makeBtn(string $title,string $url)
+    public function makeBtn(string $title, string $url)
     {
         $this->btns[] = [
-            'title' => $title,
+            'title'     => $title,
             'actionUrl' => $url,
         ];
         return $this;
@@ -221,19 +242,24 @@ class DingBot
      * @param  int|boolean $hideAvatar     头像显示 0:隐藏,1:显示
      * @return [type]                      [description]
      */
-    public function multiActionCard(string $title,string $content,array $btns = [],int $btnOrientation = 1,int $hideAvatar = 0)
-    {
+    public function multiActionCard(
+        string $title,
+        string $content,
+        array $btns = [],
+        int $btnOrientation = 1,
+        int $hideAvatar = 0
+    ) {
         $this->msgType = 'actionCard';
         if (empty($btns)) {
             $btns = $this->btns;
         }
         $data = [
             'actionCard' => [
-                'title' => $title,
-                'text' => $content,
-                'btns' => $btns,
+                'title'          => $title,
+                'text'           => $content,
+                'btns'           => $btns,
                 'btnOrientation' => $btnOrientation,
-                'hideAvatar' => $hideAvatar,
+                'hideAvatar'     => $hideAvatar,
             ],
         ];
         return $this->sendMsg($data);
@@ -246,12 +272,12 @@ class DingBot
      * @param  string $picUrl 图片链接
      * @return $this
      */
-    public function makeLink(string $title,string $msgUrl,string $picUrl)
+    public function makeLink(string $title, string $msgUrl, string $picUrl)
     {
         $this->links[] = [
-            'title' => $title,
+            'title'      => $title,
             'messageURL' => $msgUrl,
-            'picURL' => $picUrl,
+            'picURL'     => $picUrl,
         ];
         return $this;
     }
@@ -270,7 +296,7 @@ class DingBot
             throw new \Exception('links empty');
         }
         $this->msgType = 'feedCard';
-        $data = [
+        $data          = [
             'feedCard' => [
                 'links' => $links,
             ],
@@ -292,8 +318,8 @@ class DingBot
             $data['at'] = $this->at;
         }
         $this->init();
-        $res = $this->request($data);
-        $result = json_decode($res,true);
+        $res    = $this->request($data);
+        $result = json_decode($res, true);
         if ($result['errcode'] !== 0) {
             $this->error = $result['errmsg'];
             return false;
@@ -311,6 +337,22 @@ class DingBot
     }
 
     /**
+     * 加签后的接口
+     *
+     * @param string $url
+     * @return void
+     */
+    protected function signUrl(string $url): string
+    {
+        $time      = time() * 1000;
+        $strToSign = $time . "\n" . $this->secret;
+        $sign      = hash_hmac('sha256', $strToSign, $this->secret, true);
+        $sign      = base64_encode($sign);
+        $sign      = urlencode($sign);
+        return $url . '&timestamp=' . $time . '&sign=' . $sign;
+    }
+
+    /**
      * 发送数据
      * @param  array $postData 发送消息数据数组
      * @return [type]           [description]
@@ -318,16 +360,20 @@ class DingBot
     protected function request(array $postData)
     {
         $postStr = json_encode($postData);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->webhook);
+        $ch      = curl_init();
+        $apiUrl  = $this->webhook;
+        if (!empty($this->secret)) {
+            $apiUrl = $this->signUrl($this->webhook);
+        }
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array ('Content-Type: application/json;charset=utf-8'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json;charset=utf-8'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postStr);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // 线下环境不用开启curl证书验证, 未调通情况可尝试添加该代码
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $data = curl_exec($ch);
         curl_close($ch);
         return $data;

@@ -94,6 +94,7 @@ return [
             'type'           => '\\bingher\\ding\\DingLog',
             'webhook' => 'https://oapi.dingtalk.com/robot/send?access_token=xxxx', //你申请的钉钉机器人api
             'at' => [], //接收人手机号
+            'secret' => '签名密钥',
         ],
     ],
 
