@@ -24,6 +24,7 @@ class DingLog implements LogHandlerInterface
         'at'                  => [],
         'show_params'         => true,
         'show_included_files' => false,
+        'show_ip'             => true,
         'debug'               => true,
         'secret'              => '',
         'keyword'             => '',
@@ -59,6 +60,9 @@ class DingLog implements LogHandlerInterface
         }
         if ($this->config['show_params']) {
             $trace[] = '[params]' . var_export(Request::param(), true);
+        }
+        if ($this->config['show_ip']) {
+            $trace[] = '[ip]' . Request::ip(true);
         }
 
         foreach ($log as $type => $val) {
