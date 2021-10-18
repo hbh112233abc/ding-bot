@@ -228,7 +228,7 @@ class DingBot
     {
         $this->btns[] = [
             'title'     => $title,
-            'actionUrl' => $url,
+            'actionURL' => $url,
         ];
         return $this;
     }
