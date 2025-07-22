@@ -1,0 +1,20 @@
+<phpunit colors="true" verbose="true">
+    <coverage cacheDirectory="temp"
+          includeUncoveredFiles="true"
+          processUncoveredFiles="true"
+          pathCoverage="false"
+          ignoreDeprecatedCodeUnits="true"
+          disableCodeCoverageIgnore="true">
+          <include>
+            <directory suffix=".php">src</directory>
+          </include>
+          <report>
+            <html outputDirectory="temp/html-coverage" lowUpperBound="50" highLowerBound="90"/>
+        </report>
+    </coverage>
+    <testsuites>
+        <testsuite name="dingbot">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

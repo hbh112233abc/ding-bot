@@ -6,80 +6,80 @@ namespace bingher\ding;
  */
 class MarkDown
 {
-    static public function h1(string $title)
+    public static function h1(string $title)
     {
-        return '# '.$title.'\n';
+        return '# ' . $title . '\n';
     }
-    static public function h2(string $title)
+    public static function h2(string $title)
     {
-        return '## '.$title.'\n';
+        return '## ' . $title . '\n';
     }
-    static public function h3(string $title)
+    public static function h3(string $title)
     {
-        return '### '.$title.'\n';
+        return '### ' . $title . '\n';
     }
-    static public function h4(string $title)
+    public static function h4(string $title)
     {
-        return '#### '.$title.'\n';
+        return '#### ' . $title . '\n';
     }
-    static public function h5(string $title)
+    public static function h5(string $title)
     {
-        return '##### '.$title.'\n';
+        return '##### ' . $title . '\n';
     }
-    static public function h6(string $title)
+    public static function h6(string $title)
     {
-        return '###### '.$title.'\n';
-    }
-
-    static public function quote(string $content)
-    {
-        return '> '.$content;
+        return '###### ' . $title . '\n';
     }
 
-    static public function bold(string $content)
+    public static function quote(string $content)
     {
-        return '**'.$content.'**';
+        return '> ' . $content;
     }
 
-    static public function italics(string $content)
+    public static function bold(string $content)
     {
-        return '*'.$content.'*';
+        return '**' . $content . '**';
     }
 
-    static public function link(string $content,string $url)
+    public static function italics(string $content)
     {
-        return '['.$content.']('.$url.')';
+        return '*' . $content . '*';
     }
 
-    static public function image(string $url,string $tip = '')
+    public static function link(string $content, string $url)
     {
-        return '!['.$tip.']('.$url.')';
+        return '[' . $content . '](' . $url . ')';
     }
 
-    static public function ul($list)
+    public static function image(string $url, string $tip = '')
+    {
+        return '![' . $tip . '](' . $url . ')';
+    }
+
+    public static function ul($list)
     {
         if (is_string($list)) {
-            return '- '.$list;
+            return '- ' . $list;
         }
         if (is_array($list)) {
             $result = '';
-            foreach ($list as $k => $v) {
-                $result = $result . '- '.$v.'\n';
+            foreach ($list as $v) {
+                $result = $result . '- ' . $v . '\n';
             }
             return $result;
         }
     }
 
-    static public function ol($list,int $start = 1)
+    public static function ol($list, int $start = 1)
     {
         if (is_string($list)) {
-            return $start.'. '.$list;
+            return $start . '. ' . $list;
         }
         if (is_array($list)) {
             $result = '';
             foreach ($list as $k => $v) {
-                $result = $result . $start.'. '.$v.'\n';
-                $start ++;
+                $result = $result . $start . '. ' . $v . '\n';
+                $start++;
             }
             return $result;
         }

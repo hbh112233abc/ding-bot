@@ -9,7 +9,7 @@
             "email": "hbh112233abc@163.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7.0"
     },
@@ -17,5 +17,11 @@
         "psr-4": {
             "bingher\\ding\\": "src"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.5.20"
+    },
+    "scripts": {
+        "phpunit": "./vendor/bin/phpunit.bat"
     }
 }

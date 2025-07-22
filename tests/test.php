@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/src/DingBot.php';
+require __DIR__ . '/../src/DingBot.php';
 
 $config = [
     //自定义机器人api接口链接
